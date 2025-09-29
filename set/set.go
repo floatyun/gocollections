@@ -14,6 +14,10 @@ func (s Set[Item]) Has(item Item) bool {
 	return has
 }
 
+func (s Set[Item]) Contains(item Item) bool {
+	return s.Has(item)
+}
+
 func (s Set[Item]) Remove(items ...Item) Set[Item] {
 	for _, item := range items {
 		delete(s, item)
@@ -34,6 +38,9 @@ func (s Set[Item]) Sub(b Set[Item]) Set[Item] {
 
 // IsSubset 判断当前集合是否是另一个集合的子集
 func (s Set[Item]) IsSubset(b Set[Item]) bool {
+	if len(s) > len(b) {
+		return false
+	}
 	for item := range s {
 		if !b.Has(item) {
 			return false
@@ -52,6 +59,9 @@ func (s Set[Item]) HasAll(items ...Item) bool {
 }
 
 func (s Set[Item]) Intersect(b Set[Item]) Set[Item] {
+	if len(s) > len(b)+8 {
+		return b.Intersect(s)
+	}
 	res := NewSet[Item](0)
 	for item := range s {
 		if b.Has(item) {
